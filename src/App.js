@@ -17,6 +17,8 @@ constructor(props){
         displayInfo:false,
         error_msg:'',
         displayError:false,
+        weather:[],
+        displayWeather:false,
     }
 }
     displayLocation= async (e)=>{
@@ -37,6 +39,8 @@ displayError:false
 }
 )
  this.displayMap(city.data[0].lat,city.data[0].lon);
+
+this.displayWeather(searchQuery,city.data[0].lat,city.data[0].lon)
 } catch (error) {
  this.setState({
   displayInfo: false,
@@ -55,6 +59,21 @@ this.setState({
   map_src:mapSrc
 })
 }
+
+displayWeather =async (searchQuery, lat,lon)=>{
+  try {
+    const weatherURL=await axios.get(`${process.env.PORT}/weather?searchQuery=${searchQuery}&lat=${lat}&lon=${lon}`)
+this.setState({
+  displayWeather:true,
+  weather:weatherURL.data
+})
+  } catch (error) {
+    // errorMsg: error.response.state+ ': '+ error.response.data.error
+  }
+
+}
+
+
 render(){
 return(
         <div className='App'>
@@ -64,6 +83,10 @@ return(
 <DisplayedInformation cityInfo={this.state}/>
 <Map mapSource={this.state.map_src}/>
 </>
+}
+{
+  this.setState.displayWeather &&
+  <weather weatherInfo={this.state.weather}/>
 }
 {
 
