@@ -6,6 +6,7 @@ import DisplayedInformation from './Components/DisplayedInformation'
 import Map from './Components/Map';
 import Error from './Components/Error';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Movie from './Components/Movie';
 
 class App extends Component{
 constructor(props){
@@ -20,6 +21,8 @@ constructor(props){
         displayError:false,
         weather:[],
         displayWeather:false,
+        movies:[],
+        isMovie:false,
     }
 }
     displayLocation= async (e)=>{
@@ -42,6 +45,8 @@ displayError:false
  this.displayMap(city.data[0].lat,city.data[0].lon);
 
 this.displayWeather(searchQuery,city.data[0].lat,city.data[0].lon)
+
+this.displayMovie(searchQuery);
 } catch (error) {
  this.setState({
   displayInfo: false,
@@ -80,13 +85,27 @@ this.setState({
 
 }
 
-
+displayMovie = async(searchQuery)=>{
+  try{
+const movieData = await axios.get(`https://cityexplorer00.herokuapp.com/movies?searchQuery=${searchQuery}`)
+this.setState({
+  movies:movieData.data,
+  isMovie: true,
+})
+  }catch(error){
+this.setState({
+  isMovie:false,
+})
+  }
+}
 render(){
 return(
   
         <div className='App'>
   <img src='https://flyclipart.com/thumb2/environment-clip-art-158440.png' alt='earth' width='10%' height='10%'/>
+
             <SearchForm submitHandler={this.displayLocation}/>
+
 {this.state.displayInfo &&
 <>
 <DisplayedInformation cityInfo={this.state}/>
@@ -97,13 +116,18 @@ return(
   this.setState.displayWeather &&
   <weather weatherInfo={this.state.weather}/>
 }
-{
 
+{this.state.isMovie &&
+<Movie movie={this.state.movies}/>
+}
+
+{
   this.state.displayError &&
   <Error error ={this.state.error_msg}/>
 }
             <DisplayedInformation cityInfo={this.state}/>
             <Map mapSource={this.state.map_src}/>
+            
         </div>
    
     )
