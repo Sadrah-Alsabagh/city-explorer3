@@ -5,6 +5,7 @@ import {Component} from 'react';
 import DisplayedInformation from './Components/DisplayedInformation'
 import Map from './Components/Map';
 import Error from './Components/Error';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends Component{
 constructor(props){
@@ -68,7 +69,13 @@ this.setState({
   weather:weatherURL.data
 })
   } catch (error) {
-    // errorMsg: error.response.state+ ': '+ error.response.data.error
+   
+    this.setState({
+       errorMsg: error.response.status+ ': '+ error.response.data.error,
+       displayError:false,
+       displayWeather:false,
+       displayInfo:false
+    })
   }
 
 }
@@ -76,7 +83,9 @@ this.setState({
 
 render(){
 return(
+  
         <div className='App'>
+  <img src='https://flyclipart.com/thumb2/environment-clip-art-158440.png' alt='earth' width='10%' height='10%'/>
             <SearchForm submitHandler={this.displayLocation}/>
 {this.state.displayInfo &&
 <>
@@ -93,9 +102,10 @@ return(
   this.state.displayError &&
   <Error error ={this.state.error_msg}/>
 }
-            {/* <DisplayedInformation cityInfo={this.state}/>
-            <Map mapSource={this.state.map_src}/> */}
+            <DisplayedInformation cityInfo={this.state}/>
+            <Map mapSource={this.state.map_src}/>
         </div>
+   
     )
 
 }

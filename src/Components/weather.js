@@ -5,9 +5,9 @@ render(){
     return(
      <>
      {
-        this.props.weatherInfo.map(item => {
-          <li>{item.date}: {this.props.item.description}</li>   
-        })
+        this.props.weatherInfo.map(item => 
+          <li>{item.date}: {item.description}</li>   
+        )
      }
     
     </>
